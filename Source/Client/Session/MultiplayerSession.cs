@@ -51,6 +51,7 @@ namespace Multiplayer.Client
 
         public Process arbiter;
         public bool ArbiterPlaying => players.Any(p => p.type == PlayerType.Arbiter && p.status == PlayerStatus.Playing);
+        public bool IsLocalHost => players.Any(p => p.id == playerId && p.isHost);
 
         public string address;
         public int port;

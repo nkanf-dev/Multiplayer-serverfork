@@ -48,6 +48,11 @@ namespace Multiplayer.Common
         public int workTicks;
         public ActionQueue queue = new();
         public ServerSettings settings;
+        public ReplayInfo? replayInfo;
+
+        public HashSet<string> BannedUsers { get; } = new(StringComparer.OrdinalIgnoreCase);
+        public HashSet<string> WhitelistedUsers { get; } = new(StringComparer.OrdinalIgnoreCase);
+        public bool WhitelistEnabled { get; set; }
 
         public ServerInitData? InitData => initDataSource.Task.ResultNowOrNull();
         private TaskCompletionSource<ServerInitData?> initDataSource = new();
@@ -88,6 +93,9 @@ namespace Multiplayer.Common
 
             initDataSource.SetResult(null);
         }
+
+        public bool IsBanned(string username) => BannedUsers.Contains(username);
+        public bool IsWhitelisted(string username) => !WhitelistEnabled || WhitelistedUsers.Contains(username);
 
         public void Run()
         {

@@ -109,6 +109,7 @@ namespace Multiplayer.Common
             b = color.b,
 
             factionId = FactionId,
+            isHost = IsHost,
         };
 
         public ServerPlayerListPacket.PlayerLatency LatencyPacket() => new()

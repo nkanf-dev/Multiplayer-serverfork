@@ -78,6 +78,20 @@ public class ServerJoiningState : AsyncConnectionState
             return;
         }
 
+        if (Server.IsBanned(username))
+        {
+            ServerLog.Log($"Rejected banned user {username}");
+            Player.Disconnect(MpDisconnectReason.Kick);
+            return;
+        }
+
+        if (!Server.IsWhitelisted(username))
+        {
+            ServerLog.Log($"Rejected non-whitelisted user {username}");
+            Player.Disconnect(MpDisconnectReason.Kick);
+            return;
+        }
+
         connection.username = username;
     }
 

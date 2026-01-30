@@ -89,6 +89,7 @@ public record struct ServerPlayerListPacket : IPacket
         public bool simulating;
         public byte r, g, b;
         public int factionId;
+        public bool isHost;
 
         public void Bind(PacketBuffer buf)
         {
@@ -105,6 +106,7 @@ public record struct ServerPlayerListPacket : IPacket
             buf.Bind(ref g);
             buf.Bind(ref b);
             buf.Bind(ref factionId);
+            buf.Bind(ref isHost);
         }
     }
 

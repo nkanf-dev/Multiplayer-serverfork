@@ -69,6 +69,7 @@ namespace Multiplayer.Common
             conn.StateObj?.OnDisconnect();
 
             ServerPlayer player = conn.serverPlayer;
+            bool wasHost = player.IsHost;
             Players.Remove(player);
 
             if (player.hasJoined)
@@ -98,6 +99,12 @@ namespace Multiplayer.Common
             conn.ChangeState(ConnectionStateEnum.Disconnected);
 
             ServerLog.Log($"Disconnected ({reason}): {conn}");
+
+            if (wasHost)
+            {
+                server.hostUsername = null;
+                EnsureHostAssigned();
+            }
         }
 
         public void OnDesync(ServerPlayer player, int tick, int diffAt)
@@ -145,6 +152,8 @@ namespace Multiplayer.Common
             }
 
             server.SendToPlaying(ServerPlayerListPacket.Add(player.PlayerInfoPacket()));
+
+            EnsureHostAssigned();
         }
 
         public void SendInitDataCommand(ServerPlayer player)
@@ -162,6 +171,31 @@ namespace Multiplayer.Common
                 player.conn.Close(MpDisconnectReason.ServerClosed);
 
             Players.Clear();
+        }
+
+        public void SendPlayerListToAll()
+        {
+            foreach (var player in JoinedPlayers)
+                player.SendPlayerList();
+        }
+
+        public bool EnsureHostAssigned()
+        {
+            if (server.hostUsername != null)
+                return false;
+
+            var nextHost = JoinedPlayers.FirstOrDefault(p => !p.IsArbiter);
+            if (nextHost == null)
+                return false;
+
+            SetHost(nextHost);
+            return true;
+        }
+
+        public void SetHost(ServerPlayer host)
+        {
+            server.hostUsername = host.Username;
+            SendPlayerListToAll();
         }
 
         public void MakeHost(ServerPlayer host)

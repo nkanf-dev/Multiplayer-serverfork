@@ -23,6 +23,7 @@ public class PlayerInfo : IPlayerInfo
     public Color color;
     public Material selectionBracketMaterial;
     public int factionId;
+    public bool isHost;
 
     public ulong steamId;
     public string steamPersonaName;
@@ -41,6 +42,7 @@ public class PlayerInfo : IPlayerInfo
     public int Id => id;
     public string Username => username;
     public bool IsArbiter => type == PlayerType.Arbiter;
+    public bool IsHost => isHost;
     public int CurrentMapIndex => map;
     public Map CurrentMap => Find.Maps.Find(m => m.Index == map);
     public IReadOnlyList<int> SelectedThingsByIds => selectedThings
@@ -78,6 +80,7 @@ public class PlayerInfo : IPlayerInfo
             selectionBracketMaterial = MaterialPool.MatFrom("UI/Overlays/SelectionBracket", ShaderDatabase.MetaOverlay, color * new Color(1, 1, 1, 0.5f)),
 
             factionId = info.factionId,
+            isHost = info.isHost,
         };
     }
 }
