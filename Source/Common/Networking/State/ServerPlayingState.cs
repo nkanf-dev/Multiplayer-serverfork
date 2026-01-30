@@ -5,6 +5,7 @@ using Multiplayer.Common.Networking.Packet;
 
 namespace Multiplayer.Common
 {
+    [PacketHandlerClass]
     public class ServerPlayingState(ConnectionBase conn) : MpConnectionState(conn)
     {
         [PacketHandler(Packets.Client_WorldReady)]

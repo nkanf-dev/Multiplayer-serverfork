@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Multiplayer.Common.Networking.Packet;
 
 namespace Multiplayer.Common;
 
+[PacketHandlerClass]
 public class ServerLoadingState : AsyncConnectionState
 {
     public ServerLoadingState(ConnectionBase connection) : base(connection)
@@ -69,5 +71,15 @@ public class ServerLoadingState : AsyncConnectionState
         connection.SendFragmented(Packets.Server_WorldData, packetData);
 
         ServerLog.Log("World response sent: " + packetData.Length);
+    }
+
+    [TypedPacketHandler]
+    public void HandleClientKeepAlive(ClientKeepAlivePacket packet)
+    {
+        Player.keepAliveAt = Server.NetTimer;
+
+        var idMatched = Player.keepAliveId == packet.id;
+        connection.OnKeepAliveArrived(idMatched);
+        if (idMatched) Player.keepAliveId++;
     }
 }
