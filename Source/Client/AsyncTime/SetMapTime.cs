@@ -234,6 +234,7 @@ namespace Multiplayer.Client
 
             var tickManager = Find.TickManager;
             var mapComp = map.AsyncTime();
+            if (mapComp == null) return prev;
 
             tickManager.ticksGameInt = mapComp.mapTicks;
             tickManager.slower = mapComp.slower;
