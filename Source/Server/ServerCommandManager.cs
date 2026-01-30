@@ -538,18 +538,19 @@ public sealed class SaveServerStateCommand : IServerCommand
 
     public void Execute(ServerCommandContext ctx, IServerCommandSource source, string[] args)
     {
-        if (ctx.Server.worldData.savedGame == null)
+        var savedGame = ctx.Server.worldData.savedGame;
+        if (savedGame == null)
         {
             source.Reply("No world data to save yet.");
             return;
         }
 
         var path = args.Length > 0 ? args[0] : "save.zip";
-        SaveZip(ctx.Server, path);
+        SaveZip(ctx.Server, path, savedGame);
         source.Reply($"Saved to {path}");
     }
 
-    private static void SaveZip(MultiplayerServer server, string path)
+    private static void SaveZip(MultiplayerServer server, string path, byte[] savedGame)
     {
         var info = server.replayInfo;
         if (info == null)
@@ -585,7 +586,7 @@ public sealed class SaveServerStateCommand : IServerCommand
             zip.AddEntry("world/000_cmds", ScheduledCommand.SerializeCmds(cmds));
         }
 
-        zip.AddEntry("world/000_save", Decompress(server.worldData.savedGame));
+        zip.AddEntry("world/000_save", Decompress(savedGame));
         zip.AddEntry("info", ReplayInfo.Write(info));
     }
 
