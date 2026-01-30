@@ -153,7 +153,10 @@ namespace Multiplayer.Common
 
             server.SendToPlaying(ServerPlayerListPacket.Add(player.PlayerInfoPacket()));
 
-            EnsureHostAssigned();
+            if (server.hostUsername == null && !player.IsArbiter)
+                SetHost(player);
+            else
+                EnsureHostAssigned();
         }
 
         public void SendInitDataCommand(ServerPlayer player)
@@ -184,7 +187,7 @@ namespace Multiplayer.Common
             if (server.hostUsername != null)
                 return false;
 
-            var nextHost = JoinedPlayers.FirstOrDefault(p => !p.IsArbiter);
+            var nextHost = Players.FirstOrDefault(p => p.hasJoined && !p.IsArbiter);
             if (nextHost == null)
                 return false;
 
