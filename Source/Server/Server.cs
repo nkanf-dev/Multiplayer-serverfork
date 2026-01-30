@@ -29,7 +29,7 @@ var server = MultiplayerServer.instance = new MultiplayerServer(settings)
     running = true,
 };
 
-var consoleSource = new ConsoleSource();
+var consoleSource = new ConsoleCommandSource();
 var adminStore = ServerAdminStore.Load(adminFile);
 adminStore.ApplyTo(server);
 var commandManager = new ServerCommandManager(server, settings, adminStore, settingsFile, adminFile);
@@ -82,10 +82,3 @@ while (true)
         break;
 }
 
-class ConsoleSource : IChatSource
-{
-    public void SendMsg(string msg)
-    {
-        ServerLog.Log(msg);
-    }
-}

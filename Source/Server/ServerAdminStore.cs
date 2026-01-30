@@ -31,9 +31,9 @@ public sealed class ServerAdminStore
         {
             whitelistEnabled = data.whitelistEnabled
         };
-        foreach (var user in data.whitelist ?? Array.Empty<string>())
+        foreach (var user in data.whitelist ?? new List<string>())
             store.whitelist.Add(user);
-        foreach (var user in data.bans ?? Array.Empty<string>())
+        foreach (var user in data.bans ?? new List<string>())
             store.bans.Add(user);
 
         return store;
