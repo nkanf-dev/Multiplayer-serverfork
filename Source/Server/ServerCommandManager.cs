@@ -614,9 +614,9 @@ public sealed class LoadSaveCommand : IServerCommand
         }
 
         var path = args[0];
-        if (!ServerSaveLoader.TryLoad(ctx.Server, path))
+        if (!ServerSaveLoader.TryLoad(ctx.Server, path, out var error))
         {
-            source.Reply($"Failed to load save from '{path}'.");
+            source.Reply($"Failed to load save from '{path}': {error}");
             return;
         }
 

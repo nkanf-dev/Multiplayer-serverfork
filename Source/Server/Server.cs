@@ -34,8 +34,8 @@ var adminStore = ServerAdminStore.Load(adminFile);
 adminStore.ApplyTo(server);
 var commandManager = new ServerCommandManager(server, settings, adminStore, settingsFile, adminFile);
 
-if (!ServerSaveLoader.TryLoad(server, saveFile))
-    ServerLog.Log($"No save found at '{saveFile}'. Server is waiting. Use /load <path> to load a save.");
+if (!ServerSaveLoader.TryLoad(server, saveFile, out var loadError))
+    ServerLog.Log($"No save loaded from '{saveFile}': {loadError}. Server is waiting. Use /load <path> to load a save.");
 
 if (settings.direct) {
     var badEndpoint = settings.TryParseEndpoints(out var endpoints);
