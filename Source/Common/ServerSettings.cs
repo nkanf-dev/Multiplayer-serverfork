@@ -23,6 +23,7 @@ namespace Multiplayer.Common
         public bool desyncTraces = true;
         public bool syncConfigs = true;
         public AutoJoinPointFlags autoJoinPoint = AutoJoinPointFlags.Join | AutoJoinPointFlags.Desync;
+        public int autoJoinPointIntervalMinutes = 10;
         public DevModeScope devModeScope;
         public bool hasPassword;
         public string password = "";
@@ -63,6 +64,7 @@ namespace Multiplayer.Common
             ScribeLike.Look(ref desyncTraces, "desyncTraces", true);
             ScribeLike.Look(ref syncConfigs, "syncConfigs", true);
             ScribeLike.Look(ref autoJoinPoint, "autoJoinPoint", AutoJoinPointFlags.Join | AutoJoinPointFlags.Desync);
+            ScribeLike.Look(ref autoJoinPointIntervalMinutes, "autoJoinPointIntervalMinutes", 10);
             ScribeLike.Look(ref devModeScope, "devModeScope");
             ScribeLike.Look(ref hasPassword, "hasPassword");
             ScribeLike.Look(ref password!, "password", "");

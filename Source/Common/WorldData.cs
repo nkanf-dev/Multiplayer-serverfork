@@ -31,7 +31,7 @@ public class WorldData
 
     public bool TryStartJoinPointCreation(bool force = false)
     {
-        if (!force && Server.workTicks - lastJoinPointAtWorkTicks < 30)
+        if (!force && lastJoinPointAtWorkTicks >= 0 && Server.workTicks - lastJoinPointAtWorkTicks < 30)
             return false;
 
         if (CreatingJoinPoint)

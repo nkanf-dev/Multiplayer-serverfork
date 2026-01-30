@@ -76,6 +76,7 @@ namespace Multiplayer.Common
         public int sentCmdsSnapshot;
 
         public int NetTimer { get; private set; }
+        private int lastPeriodicJoinPointNetTick = -1;
 
         public MultiplayerServer(ServerSettings settings)
         {
@@ -184,6 +185,9 @@ namespace Multiplayer.Common
             if (NetTimer % NetTicksPerSecond == 0)
                 playerManager.SendLatencies();
 
+            if (NetTimer % NetTicksPerSecond == 0)
+                TryAutoJoinPointPeriodic();
+
 
             if (NetTimer % (NetTicksPerSecond / 5) == 0)
             {
@@ -203,6 +207,28 @@ namespace Multiplayer.Common
 
             if (serverTimePerTick > StandardTimePerTick * 4f)
                 serverTimePerTick = StandardTimePerTick * 4f;
+        }
+
+        private void TryAutoJoinPointPeriodic()
+        {
+            if (settings.autoJoinPointIntervalMinutes <= 0)
+                return;
+
+            if (worldData.savedGame == null || worldData.CreatingJoinPoint)
+                return;
+
+            if (!PlayingIngamePlayers.Any(p => p.IsHost))
+                return;
+
+            int intervalTicks = settings.autoJoinPointIntervalMinutes * 60 * NetTicksPerSecond;
+            if (intervalTicks <= 0)
+                return;
+
+            if (lastPeriodicJoinPointNetTick >= 0 && NetTimer - lastPeriodicJoinPointNetTick < intervalTicks)
+                return;
+
+            if (worldData.TryStartJoinPointCreation(true))
+                lastPeriodicJoinPointNetTick = NetTimer;
         }
 
         public void TryStop()

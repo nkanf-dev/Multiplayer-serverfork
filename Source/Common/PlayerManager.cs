@@ -197,8 +197,12 @@ namespace Multiplayer.Common
 
         public void SetHost(ServerPlayer host)
         {
+            bool changed = server.hostUsername != host.Username;
             server.hostUsername = host.Username;
             SendPlayerListToAll();
+
+            if (changed && server.worldData.savedGame != null)
+                server.worldData.TryStartJoinPointCreation(true);
         }
 
         public void MakeHost(ServerPlayer host)
